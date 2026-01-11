@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     POSTGRES_URL: str = os.environ.get("POSTGRES_URL")
     PGVECTOR_TABLE_NAME: str = "portfolio_vectors"
     PGVECTOR_EMBED_DIM: int = 768  # nomic-embed-text
+    POSTGRES_USERNAME: str = "neondb_owner"
+    POSTGRES_PASSWORD: str = os.environ.get("POSTGRES_PASSWORD")
+    POSTGRES_HOST:str = os.environ.get("POSTGRES_HOST")
+    POSTGRES_PORT:int = 5432    
     DATA_PATH: str = "./data"
 
 
