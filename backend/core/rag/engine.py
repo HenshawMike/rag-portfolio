@@ -58,8 +58,12 @@ def get_vector_store() -> PGVectorStore:
 
     print(f"Using connection string: {connection_string.split('@')[0]}****@****")  # Log redacted connection string
 
+    # Create async connection string
+    async_connection_string = connection_string.replace("postgresql://", "postgresql+asyncpg://")
+    
     return PGVectorStore(
         connection_string=connection_string,
+        async_connection_string=async_connection_string,
         table_name=settings.PGVECTOR_TABLE_NAME,
         embed_dim=settings.PGVECTOR_EMBED_DIM,
         hybrid_search=False,  # Disabled for Neon compatibility

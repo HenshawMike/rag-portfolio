@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
-from pydantic import Field
+from urllib.parse import quote
+from pydantic import Field, model_validator
 
 class Settings(BaseSettings):
 
@@ -19,7 +20,16 @@ class Settings(BaseSettings):
     POSTGRES_USERNAME: str = "neondb_owner"
     POSTGRES_PASSWORD: str
     POSTGRES_HOST: str
+    POSTGRES_HOST: str
     POSTGRES_PORT: int = 5432
+    POSTGRES_DB: str = "rag-folio"
+
+    @model_validator(mode="after")
+    def assemble_db_connection(self):
+        if self.POSTGRES_PASSWORD and self.POSTGRES_HOST:
+            encoded_pwd = quote(self.POSTGRES_PASSWORD)
+            self.POSTGRES_URL = f"postgresql://{self.POSTGRES_USERNAME}:{encoded_pwd}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}?sslmode=require"
+        return self
 
     # Vector store
     PGVECTOR_TABLE_NAME: str = "portfolio_vectors"
