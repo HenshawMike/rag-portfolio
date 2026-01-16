@@ -1,9 +1,8 @@
-from multiprocessing import Value
 from llama_index.core.llms import LLM
-from llama_index.core.llms.openai import OpenAI
-from llama_index.core.embeddings.ollama import OllamaEmbedding
+from llama_index.llms.openai import OpenAI
+from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.core import Settings
-from backend.config import settings
+from config import settings
 
 def get_llm()->LLM:
     if settings.LLM_PROVIDER:
@@ -16,7 +15,7 @@ def get_llm()->LLM:
     raise ValueError(f"Unsupported LLM provider: {settings.LLM_PROVIDER}")
 
 
-def init_llm_and_embedding():
+def init_llm_and_embeddings():
     Settings.llm =  get_llm()
     Settings.embedding = OllamaEmbedding(
         model_name =settings.OLLAMA_EMBED_MODEL,
