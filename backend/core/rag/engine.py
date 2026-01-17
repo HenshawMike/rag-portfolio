@@ -28,8 +28,25 @@ def ensure_vector_table():
     );
     """
 
-    with engine.begin() as conn:
-        conn.execute(text(create_table_sql))
+    import time
+    import logging
+
+    max_retries = 5
+    retry_delay = 2  # seconds
+
+    for attempt in range(max_retries):
+        try:
+            with engine.begin() as conn:
+                conn.execute(text(create_table_sql))
+            break  # Success!
+        except Exception as e:
+            if attempt < max_retries - 1:
+                logging.warning(f"Database connection attempt {attempt + 1} failed: {e}. Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+                retry_delay *= 2  # Exponential backoff
+            else:
+                logging.error("All database connection attempts failed.")
+                raise e
 
 
 # --------------------------------------------------
@@ -59,7 +76,7 @@ def get_vector_store() -> PGVectorStore:
     print(f"Using connection string: {connection_string.split('@')[0]}****@****")  # Log redacted connection string
 
     # Create async connection string
-    async_connection_string = connection_string.replace("postgresql://", "postgresql+asyncpg://")
+    async_connection_string = connection_string.replace("postgresql://", "postgresql+asyncpg://").replace("sslmode=require", "ssl=require")
     
     return PGVectorStore(
         connection_string=connection_string,

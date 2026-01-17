@@ -9,7 +9,7 @@ def get_llm()->LLM:
         return OpenAI(
             model_name= settings.LLM_MODEL,
             api_key= settings.LLM_API_KEY,
-            base_url= settings.LLM_BASE_URL,
+            api_base= settings.LLM_BASE_URL,
             temperature=0.7
         )
     raise ValueError(f"Unsupported LLM provider: {settings.LLM_PROVIDER}")

@@ -7,9 +7,9 @@ class Settings(BaseSettings):
 
     # LLM
     LLM_PROVIDER: str = "openrouter"
-    LLM_API_KEY: Optional[str] = None
+    LLM_API_KEY: Optional[str] = Field(None, alias="OPENROUTER_API_KEY", validation_alias="OPENROUTER_API_KEY")
     LLM_MODEL: str = "openrouter/deepseek/deepseek-r1-0528:free"
-    LLM_BASE_URL: str = "https://api.openrouter.ai/api/v1"
+    LLM_BASE_URL: str = "https://openrouter.ai/api/v1"
 
     # Ollama
     OLLAMA_BASE_URL: str = "http://localhost:11434"

@@ -8,6 +8,6 @@ router = APIRouter()
 async def ask_question(request:QueryRequest, engine= Depends(get_rag_engine)):
     try:
         response= await engine.aquery(request.question)
-        return QueryResponse(answer=response.text)
+        return QueryResponse(answer=str(response))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
