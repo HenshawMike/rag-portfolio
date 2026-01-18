@@ -13,7 +13,7 @@ done
 # Pull the required embedding model
 echo "Pulling embedding model: $OLLAMA_EMBED_MODEL..."
 if [ -z "$OLLAMA_EMBED_MODEL" ]; then
-  OLLAMA_EMBED_MODEL="nomic-embed-text:latest"
+  OLLAMA_EMBED_MODEL="snowflake-arctic-embed:33m"
 fi
 ollama pull $OLLAMA_EMBED_MODEL
 
