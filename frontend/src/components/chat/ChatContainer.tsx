@@ -58,10 +58,9 @@ const ChatContainer = () => {
       setMessages((prev) => [...prev, aiMessage]);
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') {
-        console.log('Chat aborted');
+        // Chat aborted by user
       } else {
         setError(err instanceof Error ? err.message : 'Unable to connect to the API. Please try again later.');
-        console.error('Chat error:', err);
       }
     } finally {
       setIsLoading(false);

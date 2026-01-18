@@ -27,7 +27,7 @@ const Mermaid: React.FC<MermaidProps> = ({ chart }) => {
                     }
                 });
             } catch (error) {
-                console.error('Mermaid render error:', error);
+                // Silently fail or handle error UI
             }
         }
     }, [chart]);
