@@ -9,11 +9,13 @@ import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarGroupContent,
+    useSidebar,
 } from "@/components/ui/sidebar";
-import { Github, Linkedin, Mail, MessageCircle } from "lucide-react";
+import { Github, Linkedin, Mail, MessageCircle, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const AppSidebar = () => {
+    const { toggleSidebar } = useSidebar();
     const socials = [
         { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/in/michael-henshaw-85579a30a', color: 'text-blue-400' },
         { name: 'GitHub', icon: Github, url: 'https://github.com/HenshawMike', color: 'text-foreground' },
@@ -24,15 +26,24 @@ const AppSidebar = () => {
     return (
         <Sidebar className="border-r border-border">
             <SidebarHeader className="p-4">
-                <div className="flex items-center gap-3 px-2 py-2">
-                    <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center">
-                        <img
-                            src="/images/Henshaw_Michael.jpeg"
-                            alt="Mike"
-                            className="w-full h-full object-cover"
-                        />
+                <div className="flex items-center justify-between px-2 py-2">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center">
+                            <img
+                                src="/images/Henshaw_Michael.jpeg"
+                                alt="Mike"
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                        <span className="font-semibold text-lg">Mike Portfolio</span>
                     </div>
-                    <span className="font-semibold text-lg">Mike Portfolio</span>
+                    <button
+                        onClick={toggleSidebar}
+                        className="p-1.5 hover:bg-secondary rounded-md text-muted-foreground hover:text-foreground transition-colors"
+                        aria-label="Close Sidebar"
+                    >
+                        <X className="h-5 w-5" />
+                    </button>
                 </div>
             </SidebarHeader>
 

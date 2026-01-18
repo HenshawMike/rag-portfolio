@@ -11,6 +11,8 @@ When relevant:
 - Suggest project screenshots using markdown images
 - Mention technologies used
 
+Note: do not hallucinate all information showed be accurate
+
 Context information:
 ---------------------
 {context_str}

@@ -2,6 +2,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { User } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Mermaid from './Mermaid';
 
 interface ChatMessageProps {
   content: string;
@@ -47,7 +48,21 @@ const ChatMessage = ({ content, isUser, isNew = false }: ChatMessageProps) => {
                       rel="noopener noreferrer"
                       className="text-primary hover:underline underline-offset-4 transition-colors"
                     />
-                  )
+                  ),
+                  code: ({ node, inline, className, children, ...props }: any) => {
+                    const match = /language-(\w+)/.exec(className || '');
+                    const isMermaid = match && match[1] === 'mermaid';
+
+                    if (!inline && isMermaid) {
+                      return <Mermaid chart={String(children).replace(/\n$/, '')} />;
+                    }
+
+                    return (
+                      <code className={className} {...props}>
+                        {children}
+                      </code>
+                    );
+                  }
                 }}
               >
                 {content}

@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
+import { Square } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import SuggestedQuestions from './SuggestedQuestions';
 import TypingIndicator from './TypingIndicator';
 import { ApiClient } from '@/services/apiClient';
 import { Message } from '@/types/chat';
+import { Button } from '@/components/ui/button';
 
 const WELCOME_MESSAGE = `Hey! I'm Mike's AI assistant. I can tell you all about his experience, projects, skills, and more. What would you like to know?`;
 
@@ -18,6 +20,7 @@ const ChatContainer = () => {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -40,8 +43,11 @@ const ChatContainer = () => {
     setIsLoading(true);
     setError(null);
 
+    const controller = new AbortController();
+    setAbortController(controller);
+
     try {
-      const data = await ApiClient.askQuestion(content);
+      const data = await ApiClient.askQuestion(content, controller.signal);
 
       const aiMessage: Message = {
         id: `ai-${Date.now()}`,
@@ -51,10 +57,23 @@ const ChatContainer = () => {
 
       setMessages((prev) => [...prev, aiMessage]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to connect to the API. Please try again later.');
-      console.error('Chat error:', err);
+      if (err instanceof Error && err.name === 'AbortError') {
+        console.log('Chat aborted');
+      } else {
+        setError(err instanceof Error ? err.message : 'Unable to connect to the API. Please try again later.');
+        console.error('Chat error:', err);
+      }
     } finally {
       setIsLoading(false);
+      setAbortController(null);
+    }
+  };
+
+  const handleStop = () => {
+    if (abortController) {
+      abortController.abort();
+      setIsLoading(false);
+      setAbortController(null);
     }
   };
 
@@ -79,7 +98,22 @@ const ChatContainer = () => {
             />
           ))}
 
-          {isLoading && <TypingIndicator />}
+          {isLoading && (
+            <div className="space-y-4">
+              <TypingIndicator />
+              <div className="flex justify-center">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleStop}
+                  className="flex items-center gap-2 text-xs h-8"
+                >
+                  <Square className="w-3 h-3 fill-current" />
+                  Stop generating
+                </Button>
+              </div>
+            </div>
+          )}
 
           {error && (
             <div className="flex justify-center animate-message-in">
