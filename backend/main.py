@@ -16,7 +16,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],           
+    allow_origins=[
+        "http://localhost:8080",
+        "https://mikes-rag-portfolio.netlify.app"
+    ],           
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
